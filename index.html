@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日天数计算器-文天玩WenTianPlay</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 24px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 生日天数计算器</h1>
+        <input type="date" id="birthday" required>
+        <br>
+        <button onclick="calculateDays()">计算天数</button>
+        <div id="result"></div>
+        <div class="footer">
+            <p>已为超过 <span id="counter">0</span> 位用户计算生日天数</p>
+        </div>
+    </div>
+
+    <script>
+        let userCount = 0;
+
+        function calculateDays() {
+            const birthdayInput = document.getElementById('birthday').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!birthdayInput) {
+                resultDiv.innerHTML = "⚠️ 请先选择您的出生日期";
+                return;
+            }
+
+            const birthDate = new Date(birthdayInput);
+            const currentDate = new Date();
+            
+            if (birthDate > currentDate) {
+                resultDiv.innerHTML = "⏰ 出生日期不能晚于今天！";
+                return;
+            }
+
+            // 计算时间差（毫秒）
+            const timeDiff = currentDate - birthDate;
+            
+            // 转换为天数
+            const days = Math.floor(timeDiff / (1000 * 3600 * 24));
+            
+            // 更新用户计数
+            userCount++;
+            document.getElementById('counter').textContent = userCount;
+
+            // 显示结果
+            resultDiv.innerHTML = `
+                🎉 您已经在地球上度过了：
+                <div style="color: #e74c3c; font-size: 36px; margin: 10px 0;">${days.toLocaleString()} 天</div>
+                <div style="font-size: 16px;">
+                    ${calculateLivedTime(timeDiff)}
+                </div>
+            `;
+        }
+
+        function calculateLivedTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            return `相当于：
+                ${hours.toLocaleString()} 小时 /
+                ${minutes.toLocaleString()} 分钟 /
+                ${seconds.toLocaleString()} 秒`;
+        }
+
+        // 初始化日期输入的最大值为今天
+        document.getElementById('birthday').max = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
